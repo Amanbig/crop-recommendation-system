@@ -4,6 +4,12 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 from fastapi import Query
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost:3000",
+]
+
 
 class PredictionRequest(BaseModel):
     N: float
@@ -20,6 +26,14 @@ labels = ['rice', 'maize', 'chickpea', 'kidneybeans', 'pigeonpeas',
           'orange', 'papaya', 'coconut', 'cotton', 'jute', 'coffee']
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/labels")
 def get_labels():
