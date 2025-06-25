@@ -5,6 +5,7 @@ from pydantic import BaseModel
 import pandas as pd
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
+from constants.constant import imageLinks
 
 origins = [
     "http://localhost:3000",
@@ -24,6 +25,7 @@ labels = ['rice', 'maize', 'chickpea', 'kidneybeans', 'pigeonpeas',
           'mothbeans', 'mungbean', 'blackgram', 'lentil', 'pomegranate',
           'banana', 'mango', 'grapes', 'watermelon', 'muskmelon', 'apple',
           'orange', 'papaya', 'coconut', 'cotton', 'jute', 'coffee']
+          
 
 app = FastAPI()
 
@@ -37,7 +39,10 @@ app.add_middleware(
 
 @app.get("/labels")
 def get_labels():
-    return labels
+    return {
+        "labels": labels,
+        "images": {label: imageLinks[label] for label in labels}
+    }
     
 
 @app.get("/data")
@@ -78,4 +83,4 @@ def predict(params: PredictionRequest):
     # Make prediction
     prediction = model.predict(input_data)
 
-    return {"prediction": labels[prediction[0]]}
+    return {"prediction": labels[prediction[0]], "image": imageLinks[labels[prediction[0]]]}

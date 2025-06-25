@@ -1,4 +1,4 @@
-import { LableCorousal } from '@/components/app/labelCorousal';
+import LabelCarousel from '@/components/app/labelCorousal';
 import { Badge } from '@/components/ui/badge';
 import React from 'react';
 
@@ -13,7 +13,7 @@ export default function Page(){
       
     <div className='flex justify-center text-center'>
       
-    <LableCorousal/>
+    <LabelCarousel/>
     </div>
     </div>
     </>
