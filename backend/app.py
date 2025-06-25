@@ -6,9 +6,11 @@ import pandas as pd
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
 from constants.constant import imageLinks
+import os
 
 origins = [
-    "http://localhost:3000",
+    # "http://localhost:3000",
+    os.getenv('ALLOWED_URL')
 ]
 
 
