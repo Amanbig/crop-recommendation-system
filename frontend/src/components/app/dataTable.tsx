@@ -14,6 +14,7 @@ import { DatasetTypes } from "@/types/data"
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
+import { Badge } from "../ui/badge";
 
 
 
@@ -39,29 +40,30 @@ export function DataTable() {
   
   return (
     <>
+      <Badge className="text-sm mb-5">This is the dataset used for training model</Badge>
     <Table>
       {/* <TableCaption>This is the dataset on which its trained.</TableCaption> */}
-      <TableHeader>
+      <TableHeader className="border-b-white border-b-2">
         <TableRow>
-          <TableHead>Nitrogen</TableHead>
-          <TableHead>Phosphorous</TableHead>
-          <TableHead>Potassium</TableHead>
-          <TableHead>Temperature</TableHead>
-          <TableHead>Humidity</TableHead>
-          <TableHead>Ph</TableHead>
-          <TableHead>Label</TableHead>
+          <TableHead  className="text-left">Nitrogen</TableHead>
+          <TableHead className="text-left">Phosphorous</TableHead>
+          <TableHead className="text-left">Potassium</TableHead>
+          <TableHead className="text-left">Temperature</TableHead>
+          <TableHead className="text-left">Humidity</TableHead>
+          <TableHead className="text-left">Ph</TableHead>
+          <TableHead className="text-left">Label</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {dataset.map((data) => (
           <TableRow key={`${data.N}-${data.P}-${data.K}`}>
-            <TableCell>{data.N}</TableCell>
-            <TableCell>{data.P}</TableCell>
-            <TableCell>{data.K}</TableCell>
-            <TableCell>{data.temperature}</TableCell>
-            <TableCell>{data.humidity}</TableCell>
-            <TableCell>{data.ph}</TableCell>
-            <TableCell>{data.label}</TableCell>
+            <TableCell  className="text-left">{data.N}</TableCell>
+            <TableCell  className="text-left">{data.P}</TableCell>
+            <TableCell  className="text-left">{data.K}</TableCell>
+            <TableCell  className="text-left">{data.temperature}</TableCell>
+            <TableCell  className="text-left">{data.humidity}</TableCell>
+            <TableCell  className="text-left">{data.ph}</TableCell>
+            <TableCell  className="text-left">{data.label}</TableCell>
           </TableRow>
         ))}
       </TableBody>

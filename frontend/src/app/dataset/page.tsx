@@ -4,8 +4,11 @@ import React from 'react';
 export default function Page(){
   
   return (
-    <div>
+    <div className='flex justify-center text-center'>
+      
+    <div className='p-4 w-[80%] border-white border-2 rounded-xl m-4'>
       <DataTable/>
+    </div>
     </div>
   )
 }
