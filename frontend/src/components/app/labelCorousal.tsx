@@ -40,7 +40,9 @@ export default function LabelCarousel() {
   const [labels, setLabels] = useState<string[]>([]);
   const [images, setImages] = useState<Record<string, string>>({});
   const [descriptions, setDescriptions] = useState<Record<string, string>>({});
-  const [plantingSeasons, setPlantingSeasons] = useState<Record<string, string[]>>({});
+  const [plantingSeasons, setPlantingSeasons] = useState<
+    Record<string, string[]>
+  >({});
   const [loaded, setLoaded] = useState<ImageLoadState>({});
   const [imageErrors, setImageErrors] = useState<ImageErrorState>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -51,20 +53,22 @@ export default function LabelCarousel() {
   const fetchLabels = useCallback(async () => {
     setIsLoading(true);
     setError("");
-    
-    try {
-      const response = await axios.get<LabelResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/labels`,
-        {
-          timeout: API_TIMEOUT,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
 
-      const { labels, images, descriptions = {}, plantingSeasons = {} } = response.data;
-      
+    try {
+      const response = await axios.get<LabelResponse>(`/api/labels`, {
+        timeout: API_TIMEOUT,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const {
+        labels,
+        images,
+        descriptions = {},
+        plantingSeasons = {},
+      } = response.data;
+
       if (!labels || !Array.isArray(labels) || labels.length === 0) {
         throw new Error("No crop labels found");
       }
@@ -73,25 +77,28 @@ export default function LabelCarousel() {
       setImages(images || {});
       setDescriptions(descriptions);
       setPlantingSeasons(plantingSeasons);
-      
+
       // Reset image states
       setLoaded({});
       setImageErrors({});
-      
     } catch (err) {
       console.error("Failed to fetch labels:", err);
-      
+
       if (axios.isAxiosError(err)) {
         const axiosError = err as AxiosError;
         if (axiosError.response) {
-          setError(`Server error: ${axiosError.response.status} - ${axiosError.response.statusText}`);
+          setError(
+            `Server error: ${axiosError.response.status} - ${axiosError.response.statusText}`,
+          );
         } else if (axiosError.request) {
           setError("Network error: Unable to connect to the server");
         } else {
           setError(`Request error: ${axiosError.message}`);
         }
       } else {
-        setError(err instanceof Error ? err.message : "An unexpected error occurred");
+        setError(
+          err instanceof Error ? err.message : "An unexpected error occurred",
+        );
       }
     } finally {
       setIsLoading(false);
@@ -107,23 +114,23 @@ export default function LabelCarousel() {
   useEffect(() => {
     if (error && retryCount < 3) {
       const timer = setTimeout(() => {
-        setRetryCount(prev => prev + 1);
+        setRetryCount((prev) => prev + 1);
         fetchLabels();
       }, RETRY_DELAY);
-      
+
       return () => clearTimeout(timer);
     }
   }, [error, retryCount, fetchLabels]);
 
   // Handle image load success
   const handleImageLoad = useCallback((label: string) => {
-    setLoaded(prev => ({ ...prev, [label]: true }));
+    setLoaded((prev) => ({ ...prev, [label]: true }));
   }, []);
 
   // Handle image load error
   const handleImageError = useCallback((label: string) => {
-    setImageErrors(prev => ({ ...prev, [label]: true }));
-    setLoaded(prev => ({ ...prev, [label]: true })); // Stop showing skeleton
+    setImageErrors((prev) => ({ ...prev, [label]: true }));
+    setLoaded((prev) => ({ ...prev, [label]: true })); // Stop showing skeleton
   }, []);
 
   // Manual retry
@@ -136,8 +143,8 @@ export default function LabelCarousel() {
   const formatCropName = useCallback((name: string) => {
     return name
       .split(/[_-]/)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   }, []);
 
   // Get season colors
@@ -148,7 +155,7 @@ export default function LabelCarousel() {
       autumn: "bg-orange-100 text-orange-800",
       winter: "bg-blue-100 text-blue-800",
       monsoon: "bg-cyan-100 text-cyan-800",
-      'year-round': "bg-purple-100 text-purple-800",
+      "year-round": "bg-purple-100 text-purple-800",
     };
     return colors[season.toLowerCase()] || "bg-gray-100 text-gray-800";
   };
@@ -239,10 +246,10 @@ export default function LabelCarousel() {
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Some data may be incomplete due to connection issues.
-            <Button 
-              onClick={handleRetry} 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              onClick={handleRetry}
+              variant="ghost"
+              size="sm"
               className="ml-2 h-6 px-2"
             >
               Retry
@@ -262,7 +269,10 @@ export default function LabelCarousel() {
       >
         <CarouselContent className="-ml-2 md:-ml-4">
           {labels.map((label, index) => (
-            <CarouselItem key={label} className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <CarouselItem
+              key={label}
+              className="pl-2 md:pl-4 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+            >
               <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full">
                 <CardContent className="p-4 flex flex-col h-full">
                   {/* Image Container */}
@@ -270,7 +280,7 @@ export default function LabelCarousel() {
                     {!loaded[label] && (
                       <Skeleton className="absolute inset-0 w-full h-full" />
                     )}
-                    
+
                     {images[label] && !imageErrors[label] && (
                       <Image
                         src={images[label]}
@@ -285,13 +295,14 @@ export default function LabelCarousel() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                       />
                     )}
-                    
-                    {(imageErrors[label] || !images[label]) && loaded[label] && (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-gray-50">
-                        <Leaf className="h-8 w-8 mb-2" />
-                        <span className="text-xs">Image unavailable</span>
-                      </div>
-                    )}
+
+                    {(imageErrors[label] || !images[label]) &&
+                      loaded[label] && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 bg-gray-50">
+                          <Leaf className="h-8 w-8 mb-2" />
+                          <span className="text-xs">Image unavailable</span>
+                        </div>
+                      )}
                   </div>
 
                   {/* Content */}
@@ -299,55 +310,63 @@ export default function LabelCarousel() {
                     <h3 className="text-lg font-semibold text-center mb-2 text-gray-800">
                       {formatCropName(label)}
                     </h3>
-                    
+
                     {descriptions[label] && (
                       <p className="text-sm text-gray-600 mb-3 text-center line-clamp-2">
                         {descriptions[label]}
                       </p>
                     )}
-                    
+
                     {/* Planting Seasons */}
-                    {plantingSeasons[label] && plantingSeasons[label].length > 0 && (
-                      <div className="mt-auto">
-                        <p className="text-xs text-gray-500 mb-1 text-center">Best planting seasons:</p>
-                        <div className="flex flex-wrap gap-1 justify-center">
-                          {plantingSeasons[label].slice(0, 3).map((season) => (
-                            <Badge
-                              key={season}
-                              variant="secondary"
-                              className={`text-xs px-2 py-1 ${getSeasonColor(season)}`}
-                            >
-                              {season}
-                            </Badge>
-                          ))}
-                          {plantingSeasons[label].length > 3 && (
-                            <Badge variant="outline" className="text-xs px-2 py-1">
-                              +{plantingSeasons[label].length - 3}
-                            </Badge>
-                          )}
+                    {plantingSeasons[label] &&
+                      plantingSeasons[label].length > 0 && (
+                        <div className="mt-auto">
+                          <p className="text-xs text-gray-500 mb-1 text-center">
+                            Best planting seasons:
+                          </p>
+                          <div className="flex flex-wrap gap-1 justify-center">
+                            {plantingSeasons[label]
+                              .slice(0, 3)
+                              .map((season) => (
+                                <Badge
+                                  key={season}
+                                  variant="secondary"
+                                  className={`text-xs px-2 py-1 ${getSeasonColor(season)}`}
+                                >
+                                  {season}
+                                </Badge>
+                              ))}
+                            {plantingSeasons[label].length > 3 && (
+                              <Badge
+                                variant="outline"
+                                className="text-xs px-2 py-1"
+                              >
+                                +{plantingSeasons[label].length - 3}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
                   </div>
                 </CardContent>
               </Card>
             </CarouselItem>
           ))}
         </CarouselContent>
-        
+
         <CarouselPrevious className="hidden md:flex" />
         <CarouselNext className="hidden md:flex" />
       </Carousel>
 
       {/* Stats */}
       <div className="text-center mt-6 text-sm text-gray-500">
-        Showing {labels.length} crops • 
+        Showing {labels.length} crops •
         {isLoading && <span className="ml-1">Loading...</span>}
         {!isLoading && (
-          <Button 
-            onClick={handleRetry} 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            onClick={handleRetry}
+            variant="ghost"
+            size="sm"
             className="ml-1 h-6 px-2 text-xs"
           >
             <RefreshCw className="h-3 w-3 mr-1" />
