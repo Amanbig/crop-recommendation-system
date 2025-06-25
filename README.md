@@ -16,6 +16,9 @@ A comprehensive machine learning-powered web application that provides intellige
 - [Contributing](#contributing)
 - [License](#license)
 
+## Deployed at:
+[Website](https://crop-recommendation-system-iota.vercel.app/)
+
 ## ✨ Features
 
 ### 🎯 Core Features
