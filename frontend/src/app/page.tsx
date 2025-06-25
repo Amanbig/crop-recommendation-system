@@ -384,7 +384,7 @@ export default function CropRecommendationHomepage() {
             </div>
             <p> Amanpreet Singh. All rights reserved.</p>
             <div className="flex space-x-4 mt-2 sm:mt-0">
-              <a href="https://github.com/Amansvg" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition">
+              <a href="https://github.com/Amanbig" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition">
                 GitHub
               </a>
               <a href="https://www.linkedin.com/in/amanpreet-singh-9a1929211" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition">
