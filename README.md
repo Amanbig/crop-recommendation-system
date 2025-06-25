@@ -17,7 +17,28 @@ A comprehensive machine learning-powered web application that provides intellige
 - [License](#license)
 
 ## Deployed at:
-[Website](https://crop-recommendation-system-iota.vercel.app/)
+### Website Deployment
+- [Website](https://crop-recommendation-system-iota.vercel.app/)
+
+### Docker images
+To run docker containers first we need to pull the docker images
+```bash
+docker pull procoder588/crop_recommendation_frontend
+docker pull procoder588/crop_recommendation_backend
+```
+
+To run the containers this is the command and be sure to update your backend and frontend urls
+```bash
+docker run -d --name CROPBackend -p 8000:8000 --network crop -e ALLOWED_URL=<your frontend url>  procoder588/crop_recommendation_backend
+docker run -d --name CROPFrontend -p 3000:3000 --network crop -e BACKEND_URL=<your backend url> procoder588/crop_recommendation_frontend
+```
+
+### Docker compose
+You could also run it directly using docker compose
+```bash
+docker compose up -d
+```
+
 
 ## ✨ Features
 
