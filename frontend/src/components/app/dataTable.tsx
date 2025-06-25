@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { Badge } from "../ui/badge";
 
-export function DataTable() {
+export default function DataTable() {
   const [page, setPage] = useState<number>(1);
   const [dataset, setDataset] = useState<DatasetTypes[]>([]);
 

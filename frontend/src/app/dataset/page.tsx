@@ -1,4 +1,4 @@
-import { DataTable } from '@/components/app/dataTable';
+import  DataTable  from '@/components/app/dataTable';
 import React from 'react';
 
 export default function Page(){
