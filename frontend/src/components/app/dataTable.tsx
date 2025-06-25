@@ -43,7 +43,7 @@ export function DataTable() {
       <Badge className="text-sm mb-5">This is the dataset used for training model</Badge>
     <Table>
       {/* <TableCaption>This is the dataset on which its trained.</TableCaption> */}
-      <TableHeader className="border-b-white border-b-2">
+      <TableHeader className="dark:border-b-white border-b-black border-b-2">
         <TableRow>
           <TableHead  className="text-left">Nitrogen</TableHead>
           <TableHead className="text-left">Phosphorous</TableHead>
