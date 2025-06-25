@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: crop-recommendation-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - ALLOWED_URL=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - backend_data:/app/data
+    networks:
+      - crop-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import requests; requests.get('http://localhost:8000/labels')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: crop-recommendation-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - BACKEND_URL=http://backend:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - crop-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/api/labels",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  crop-network:
+    driver: bridge
+    name: crop-recommendation-network
+
+volumes:
+  backend_data:
+    driver: local
+    name: crop-recommendation-data
